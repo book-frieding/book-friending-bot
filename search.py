@@ -25,7 +25,7 @@ async def search_books(search_string: str):
         books.append((book['title']+", "+book['author'], book['_id']))
     return books
 
-
+  
 async def search_books(search_string: str):
     book_cursor = db.books.find({'$text': {'$search': search_string}}, {"score": {"$meta": "textScore"}})  #
     book_cursor.sort([('score', {'$meta': 'textScore'})])

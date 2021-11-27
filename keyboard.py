@@ -41,6 +41,7 @@ kb_help_and_change_contact_info = ReplyKeyboardMarkup(
 
 kb_help_and_change_contact_info_and_add_book = ReplyKeyboardMarkup(
     resize_keyboard=True, one_time_keyboard=True
+
 ).add(button_add_book_by_title).add(button_add_book_by_author).add(button_change_contact_info).add(button_help)
 
 kb_help_and_change_contact_info_and_add_book_and_find_friend = ReplyKeyboardMarkup(
@@ -58,6 +59,7 @@ async def create_keyboard_for_books(book_list):
 
     return book_keyboard
 
+ 
 
 async def create_keyboard_for_matches(match_list):
 

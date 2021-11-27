@@ -12,5 +12,3 @@ async def vectorize_user_by_book(_id):
     vec = np.array(vec)
     vec = list(np.mean(vec, axis=0))
     result = await db.tg_users.update_one({'_id': _id}, {'$set': {'book_vector': vec}})
-
-

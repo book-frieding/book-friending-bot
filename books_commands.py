@@ -3,14 +3,17 @@ from connector import dp, db, book_info
 from states import WaitFor
 from keyboard import *
 from aiogram.types.message import ContentType
+
 from search import search_books
 from vector_operations import vectorize_user_by_book
 
 
 @dp.message_handler(commands=['add_book'], state=WaitFor.free_state)
 async def add_book(message: types.Message):
+
     await message.reply("Please, write the name of the book you want to add as your favorite")
     await WaitFor.waiting_for_book_query.set()
+
 
 
 @dp.message_handler(commands=['add_book_by_title'], state=WaitFor.free_state)
@@ -30,7 +33,6 @@ async def process_start_command(message: types.Message):
 async def unknown_message(msg: types.Message):
     book_string = msg.text
     books = await search_books(book_string)
-
     if len(books) > 0:
         keyboard = await create_keyboard_for_books(["/cannot_find_my_book"] + [b[0] for b in books])
         book_info[msg.from_user.id] = tuple(books)

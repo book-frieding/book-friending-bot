@@ -26,5 +26,3 @@ def query_top_k_by_book(p, vector):
 book_index = create_index()
 
 
-
-
