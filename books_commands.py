@@ -3,20 +3,36 @@ from connector import dp, db, book_info
 from states import WaitFor
 from keyboard import *
 from aiogram.types.message import ContentType
-from search import search
-from vector_operations import vectorize_user_by_book, vectorize_user_by_genre
+
+from search import search_books
+from vector_operations import vectorize_user_by_book
 
 
 @dp.message_handler(commands=['add_book'], state=WaitFor.free_state)
-async def process_start_command(message: types.Message):
+async def add_book(message: types.Message):
+
     await message.reply("Please, write the name of the book you want to add as your favorite")
     await WaitFor.waiting_for_book_query.set()
 
 
-@dp.message_handler(content_types=ContentType.TEXT, state=WaitFor.waiting_for_book_query)
+
+@dp.message_handler(commands=['add_book_by_title'], state=WaitFor.free_state)
+async def add_book_by_title(message: types.Message):
+    await message.reply("Please, write the name of the book you want to add as your favorite:")
+    await WaitFor.waiting_for_book_name_query.set()
+
+
+@dp.message_handler(commands=['add_book_by_author'], state=WaitFor.free_state)
+async def process_start_command(message: types.Message):
+    await message.reply("Please, write the name of the author you want to add as your favorite one:")
+    await WaitFor.waiting_for_book_author_query.set()
+
+
+@dp.message_handler(content_types=ContentType.TEXT, state=[WaitFor.waiting_for_book_name_query,
+                                                           WaitFor.waiting_for_book_author_query])
 async def unknown_message(msg: types.Message):
     book_string = msg.text
-    books = await search(book_string)
+    books = await search_books(book_string)
     if len(books) > 0:
         keyboard = await create_keyboard_for_books(["/cannot_find_my_book"] + [b[0] for b in books])
         book_info[msg.from_user.id] = tuple(books)
@@ -53,7 +69,6 @@ async def add_existing_book(msg: types.Message):
     del book_info[msg.from_user.id]
 
     await vectorize_user_by_book(msg.from_user.id)
-    await vectorize_user_by_genre(msg.from_user.id)
 
     await msg.reply("Successfully done! Now you can choose another book or try to find "
                     "new friends based on the book you like!",

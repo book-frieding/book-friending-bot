@@ -3,7 +3,6 @@ from connector import dp
 from states import WaitFor
 from keyboard import *
 from aiogram.types.message import ContentType
-from tree_operations import build_book_index
 
 
 @dp.message_handler(commands=['start', 'restart'], state="*")
