@@ -17,6 +17,7 @@ pym_db = pym_client.test
 contact_info = {}
 contact_info_mapping = ["name", "age", "location", "gender"]
 book_info = {}
+matches_info = {}
 
 db = client["test"]
 user_collection = db["tg_users"]

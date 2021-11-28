@@ -1,5 +1,3 @@
-import asyncio
-from annoy import AnnoyIndex
 from connector import pym_db
 import hnswlib
 import numpy as np
@@ -21,11 +19,10 @@ def create_index(dim=768):
 
 
 def query_top_k_by_book(p, vector):
-    labels, distances = p.knn_query(np.array(vector), k=10)
+    labels, distances = p.knn_query(np.array(vector), k=6)
     return labels[0][1:]
 
+
 book_index = create_index()
-
-
 
 

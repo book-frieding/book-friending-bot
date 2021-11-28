@@ -35,7 +35,10 @@ async def process_help_command(message: types.Message):
                         reply_markup=kb_help)
 
 
-@dp.message_handler(commands=['help'], state=WaitFor.waiting_for_book_query)
+
+
+@dp.message_handler(commands=['help'], state=[WaitFor.waiting_for_book_name_query,
+                                                           WaitFor.waiting_for_book_author_query])
 async def process_help_command(message: types.Message):
     await message.reply("Now you need to write the name of the books that you like.",
                         reply_markup=kb_help)

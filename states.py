@@ -7,10 +7,10 @@ class WaitFor(StatesGroup):
     waiting_for_age = State()
     waiting_for_city = State()
     waiting_for_gender = State()
-    waiting_for_book_query = State()
+    waiting_for_book_name_query = State()
+    waiting_for_book_author_query = State()
     waiting_for_book_name = State()
-
-    waiting_for_book_upload = State()
-
+    waiting_for_author_name = State()
     changing_contact_info = State()
     free_state = State()
+    waiting_for_alias = State()
