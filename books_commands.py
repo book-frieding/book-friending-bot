@@ -10,10 +10,8 @@ from vector_operations import vectorize_user_by_book
 
 @dp.message_handler(commands=['add_book'], state=WaitFor.free_state)
 async def add_book(message: types.Message):
-
     await message.reply("Please, write the name of the book you want to add as your favorite")
     await WaitFor.waiting_for_book_query.set()
-
 
 
 @dp.message_handler(commands=['add_book_by_title'], state=WaitFor.free_state)

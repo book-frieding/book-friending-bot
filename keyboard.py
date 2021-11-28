@@ -48,7 +48,6 @@ kb_help_and_change_contact_info_and_add_book_and_find_friend = ReplyKeyboardMark
     resize_keyboard=True, one_time_keyboard=True
 ).add(button_find_friend).add(button_add_book_by_title).add(button_add_book_by_author).add(button_change_contact_info).add(button_help)
 
-
 async def create_keyboard_for_books(book_list):
 
     book_keyboard = ReplyKeyboardMarkup(
@@ -58,8 +57,7 @@ async def create_keyboard_for_books(book_list):
         book_keyboard.add(book_button)
 
     return book_keyboard
-
- 
+  
 
 async def create_keyboard_for_matches(match_list):
 
@@ -70,3 +68,4 @@ async def create_keyboard_for_matches(match_list):
         match_keyboard.add(book_button)
 
     return match_keyboard
+

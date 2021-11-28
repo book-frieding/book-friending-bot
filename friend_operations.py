@@ -31,4 +31,3 @@ async def add_existing_book(msg: types.Message):
     await msg.reply("Alias of chosen user is @{}. Good luck!".format(query_alias),
                     reply_markup=kb_help_and_change_contact_info_and_add_book_and_find_friend)
     await WaitFor.free_state.set()
-

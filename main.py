@@ -8,6 +8,7 @@ import books_commands
 import friend_operations
 import search
 from tree_operations import create_index
+import book_upload.book_upload
 
 if __name__ == '__main__':
     executor.start_polling(dp, skip_updates=True)
