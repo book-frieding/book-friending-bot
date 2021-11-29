@@ -44,10 +44,18 @@ async def unknown_message(msg: types.Message):
         result = await db.tg_users.insert_one(doc)
         print('result %s' % repr(result.inserted_id))
     else:
+        if "liked_books_ids" in user.keys():
+            doc["liked_books_ids"] = user["liked_books_ids"]
+            doc["book_vector"] = user["book_vector"]
         result = await db.tg_users.replace_one({'_id': msg.from_user.id}, doc)
         print('replaced %s document' % result.modified_count)
 
     now = datetime.datetime.now()
+    if "liked_books_ids" in user.keys():
+        keyb = kb_help_and_change_contact_info_and_add_book_and_find_friend
+    else:
+        keyb = kb_help_and_change_contact_info_and_add_book
+
     await msg.reply("Thanks! Now we are done with this! Your contact information is:\n \n"
                     "Name: {}\n"
                     "Age: {}\n"
@@ -58,7 +66,7 @@ async def unknown_message(msg: types.Message):
                     "you can do it at any time with /change_contact_info button".format(doc["name"],
                                                                                         now.year - doc["age"],
                                                                                         doc["location"], doc["gender"]),
-                    reply_markup=kb_help_and_change_contact_info_and_add_book)
+                    reply_markup=keyb)
     await WaitFor.free_state.set()
 
 

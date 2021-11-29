@@ -6,6 +6,7 @@ from aiogram.types.message import ContentType
 
 from search import search_books
 from vector_operations import vectorize_user_by_book
+from tree_operations import add_user_to_tree, book_index
 
 
 @dp.message_handler(commands=['add_book'], state=WaitFor.free_state)
@@ -38,7 +39,9 @@ async def unknown_message(msg: types.Message):
                         reply_markup=keyboard)
         await WaitFor.waiting_for_book_name.set()
     else:
-        await msg.reply("Could not find the book by your query. Please, try another with /add_book command.",
+        await msg.reply("Could not find the book by your query. Please, try another with /add_book_by_title or"
+                        " /add_book_by_author commands. Also you can upload another famous book that you like by "
+                        " /add_new_book command.",
                         reply_markup=kb_help_and_change_contact_info_and_add_book)
         await WaitFor.free_state.set()
 
@@ -46,7 +49,8 @@ async def unknown_message(msg: types.Message):
 @dp.message_handler(commands=['cannot_find_my_book'], state=WaitFor.waiting_for_book_name)
 async def unknown_message(msg: types.Message):
     del book_info[msg.from_user.id]
-    await msg.reply("That's a pity! Please, try another with /add_book command or you can upload another famous book"
+    await msg.reply("That's a pity! Please, try another with /add_book_by_title or"
+                    " /add_book_by_author commands or you can upload another famous book"
                     " that you like by /add_new_book command.",
                     reply_markup=kb_help_and_change_contact_info_and_add_book)
     await WaitFor.free_state.set()
@@ -66,9 +70,13 @@ async def add_existing_book(msg: types.Message):
         result = await db.tg_users.update_one({'_id': msg.from_user.id}, {'$set': {'liked_books_ids': [book_id]}})
     del book_info[msg.from_user.id]
 
-    await vectorize_user_by_book(msg.from_user.id)
+    vec = await vectorize_user_by_book(msg.from_user.id)
+
+    add_user_to_tree(book_index, vec, msg.from_user.id)
 
     await msg.reply("Successfully done! Now you can choose another book or try to find "
                     "new friends based on the book you like!",
                     reply_markup=kb_help_and_change_contact_info_and_add_book_and_find_friend)
+
+
     await WaitFor.free_state.set()

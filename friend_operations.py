@@ -7,7 +7,7 @@ from aiogram.types.message import ContentType
 from search import search_users
 
 
-@dp.message_handler(commands=['find_friend'], state="*")
+@dp.message_handler(commands=['find_friend'], state=WaitFor.free_state)
 async def find_friends_by_books(msg: types.Message):
     user = await db.tg_users.find_one({'_id': {'$eq': msg.from_user.id}})
     matches = query_top_k_by_book(book_index, user['book_vector'])

@@ -3,12 +3,15 @@ from connector import dp, db, book_info, bot, book_collection
 from states import WaitFor
 from keyboard import *
 from aiogram.types.message import ContentType
-from search import search
-from vector_operations import vectorize_user_by_book, vectorize_user_by_genre
+from search import search_books
+from vector_operations import vectorize_user_by_book
 from aiogram_forms import forms
+from tree_operations import add_user_to_tree, book_index
+
 from .fields import StringField, ArrayField
 from aiogram.dispatcher import FSMContext
 from .embeddings import process_description
+
 
 class BookForm(forms.Form):
     title = StringField('Title')
@@ -31,7 +34,7 @@ class BookForm(forms.Form):
             dispatcher = Dispatcher.get_current()
             await dispatcher.bot.send_message(
                 types.Chat.get_current().id,
-                text=field.validation_error
+                text="Please, write a {} of the book you want to add:".format(field.validation_error)
             )
             return
 
@@ -51,7 +54,6 @@ class BookForm(forms.Form):
         await state.reset_state(with_data=False)
         if cls._callback:
             await cls._callback(message)
-
 
 
 @dp.message_handler(commands=['add_new_book'], state=WaitFor.free_state)
@@ -80,6 +82,10 @@ async def _show_info(message):
     #
     await db.tg_users.update_one({'_id': user_id}, {'$set': {'liked_books_ids': books_ids}})
 
-    await bot.send_message(chat_id, 'Thanks! New book created and added to your favourites!')
+    await bot.send_message(chat_id, 'Thanks! New book created and added to your favourites!',
+                           reply_markup=kb_help_and_change_contact_info_and_add_book_and_find_friend)
 
+    vec = await vectorize_user_by_book(user_id)
+    add_user_to_tree(book_index, vec, user_id)
+    print("Success")
     await WaitFor.free_state.set()
