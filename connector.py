@@ -5,7 +5,7 @@ from pymongo import MongoClient
 
 
 MAX_elements = 100
-CONNECTION_STRING = "mongodb+srv://pakrentos:kyh63r8l48@bookfriendingapp.nme65.mongodb.net/test"
+CONNECTION_STRING = ""
 
 client = motor.motor_asyncio.AsyncIOMotorClient(
     CONNECTION_STRING, uuidRepresentation="standard"
